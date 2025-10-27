@@ -4,7 +4,7 @@
 ```mermaid
 graph LR
      %% System input and outputs
-    usb_sys_dcpwr --> Jedi
+    usb_pwr_mng_dcpwr --> Jedi
     camera_nano_envin --> Jedi
     %%usr_in --> Jedi
     Jedi --> amp_out_vibration_asig
@@ -44,7 +44,7 @@ graph TD
         end
 
         %% System input and outputs
-        usb_sys_dcpwr --> Jedi
+        usb_pwr_mng_dcpwr --> Jedi
         camera_nano_envin --> Jedi
         %%usr_in --> Jedi
         Jedi --> amp_out_vibration_asig
