@@ -4,10 +4,10 @@
 ```mermaid
 graph LR
      %% System input and outputs
-    dc_pwr_in --> Jedi
-    environ_in --> Jedi
-    usr_in --> Jedi
-    Jedi --> vibration_out
+    usb_sys_dcpwr --> Jedi
+    camera_nano_envin --> Jedi
+    %%usr_in --> Jedi
+    Jedi --> amp_out_vibration_asig
     Jedi --> safety_out
 ```
 
@@ -17,32 +17,37 @@ graph TD
     subgraph System
         subgraph Jedi
             %% Power management block
-            sys_input -- "dc_pwr_in" --> pwr_management
-            pwr_management -- "pwr_nano_info" --> CodeBlocks
-            pwr_management -- "dc_pwr" --> CodeBlocks
+            sys_input -- "usb_pwr_mng_dcpwr" --> pwr_management
+            sys_input -- "camera_nano_envin" --> Nano
+            pwr_management -- "dc_pwr" --> Nano
             pwr_management -- "dc_pwr" --> amp_vibration
-            pwr_management -- "dc_pwr" --> audio_dac
+            pwr_management -- "pwr_mng_dac_dcpwr" --> audio_dac
+            pwr_management -- "pwr_mng_shm_dcpwr" --> sys_health_monitor_mc
 
             %% Camera
             %%sys_input -- "environ_in" --> camera
-            %%camera -- "cam_feed" --> CodeBlocks
+            %%camera -- "cam_feed" --> Nano
 
             %% Mode Switch
             %%sys_input -- "usr_in" --> mode_switch
-            %%mode_switch -- "det_mode" --> CodeBlocks
+            %%mode_switch -- "det_mode" --> Nano
 
-            CodeBlocks -- "nano_dac_comm" --> audio_dac
+            %% System Health Monitor
+            pwr_management <-- "pwr_mng_shm_asig" --> sys_health_monitor_mc
+            sys_health_monitor_mc <-- "shs_nano_comm" --> Nano
+
+            Nano -- "nano_dac_comm" --> audio_dac
             audio_dac -- "dac_amp_asig" --> amp_vibration
-            sys_input -- "usr_in" --> CodeBlocks
-            amp_vibration -- "amp_out_vibration" --> sys_out
+            %%sys_input -- "usr_in" --> Nano
+            amp_vibration -- "amp_out_vibration_asig" --> sys_out
 
         end
 
         %% System input and outputs
-        dc_pwr_in --> Jedi
-        environ_in --> Jedi
-        usr_in --> Jedi
-        Jedi --> vibration_out
+        usb_sys_dcpwr --> Jedi
+        camera_nano_envin --> Jedi
+        %%usr_in --> Jedi
+        Jedi --> amp_out_vibration_asig
         Jedi --> safety_out
     end
 ```
@@ -52,19 +57,19 @@ graph TD
     subgraph System
 
         %% Code
-        subgraph CodeBlocks
-            code_in -- "env_cam_feed" --> cam_input_process
-            code_in -- "pwr_nano_info" --> sys_management
-            cam_input_process -- "cam_proc_video_feed_representation" --> object_representation
-            cam_input_process -- "cam_proc_video_feed_representation" --> environment_representation
-            cam_input_process -- "cam_proc_video_feed_representation" --> scene_creation
-            object_representation -- "object_rep_audio_info_mask_coords" --> scene_to_audio_info
-            environment_representation -- "object_rep_audio_info_mask_coords" --> scene_to_audio_info
-            scene_creation -- "scene_audio_info_rep" --> scene_to_audio_info
+        subgraph Nano
+            code_in -- "camera_nano_envin" --> cam_input_process
+            code_in -- "shs_nano_comm" --> sys_management
+            cam_input_process -- "cam_proc_video_feed_data" --> object_representation
+            cam_input_process -- "cam_proc_video_feed_data" --> environment_representation
+            cam_input_process -- "cam_proc_video_feed_data" --> scene_creation
+            object_representation -- "object_rep_audio_info_data" --> scene_to_audio_info
+            environment_representation -- "object_rep_audio_info_data" --> scene_to_audio_info
+            scene_creation -- "scene_audio_info_data" --> scene_to_audio_info
             sys_management -- "sys_management_info" --> sys_info_to_audio
-            sys_info_to_audio -- "sys_info_audio_info_track" --> audio_info_to_spatial_audio
-            scene_to_audio_info -- "audio_info" --> audio_info_to_spatial_audio
-            audio_info_to_spatial_audio -- "usb_spatial_audio" --> code_out
+            sys_info_to_audio -- "sys_mng_info_audio_info_track" --> audio_info_to_spatial_audio
+            scene_to_audio_info -- "audio_info_spatial_audio_data" --> audio_info_to_spatial_audio
+            audio_info_to_spatial_audio -- "nano_usb_spatial_audio_data" --> code_out
         end
     end
 ```
