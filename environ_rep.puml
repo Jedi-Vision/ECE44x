@@ -1,0 +1,39 @@
+@startuml Environment Representation
+
+abstract AbstractModelClass {
+    model : torch.nn.Module
+    device : str
+    + {abstract} run(inputs, device: str): ObjectRepData
+    - {abstract} preprocess(input)
+    - {abstract} forward(input)
+    - {abstract} postprocess(out): ObjectRepData
+}
+
+class SegFormerEnvironmentRepresentationModelClass {
+    model: torch.nn.Module
+    k: int
+    device: str
+    + run(inputs: PIL.Image[H, W], device: str): ObjectRepData
+    - preprocess(input: PIL.Image[H, W]): BatchFeature
+    - forward(input: BatchFeature): torch.Tensor<B, L, H/4, W/4>
+    - postprocess(out: torch.Tensor<uint8>[B, L, H/4, W/4]): ObjectRepData
+}
+
+AbstractModelClass <|.. SegFormerEnvironmentRepresentationModelClass : implements
+AbstractModelClass --> ObjectRepData : uses
+
+class ObjectXYCoordData {
+    object_id: Union[int, None]
+    label: Union[str, None]
+    x: float
+    y: float
+}
+
+ObjectRepData --> ObjectXYCoordData : uses
+
+class ObjectRepData {
+    object_coordinates : list[ObjectXYCoordData]
+    mask: torch.Tensor<uint8>[H, W]
+}
+
+@enduml
