@@ -1,0 +1,48 @@
+@startuml Object Representation
+
+abstract AbstractModelClass {
+    model : torch.nn.Module
+    device : str
+    + {abstract} run(inputs): list[ObjectCoordData]
+    - {abstract} preprocess(input)
+    - {abstract} process(input)
+    - {abstract} postprocess(out)
+}
+
+class YoloObjectRepresentationModel {
+    model: torch.nn.Module
+    device: str
+    track_history: dict
+    retain_frames: int
+    + run(inputs: numpy.ndarray<uint8>[B, C, H, W]): list[ObjectCoordData]
+    - process(input: numpy.ndarray<uint8>[B, C, H, W]): Results
+    - postprocess(out: Results): list[ObjectCoordData]
+}
+
+class Results {
+    orig_img: numpy.ndarray
+    orig_shape: tuple[int, int]
+    boxes: Boxes
+    masks: Masks
+    probs: Probs
+    keypoints: Keypoints
+    obb: OBB
+    speed: dict
+    names: dict
+    path: str
+    save_dir: str
+}
+
+AbstractModelClass <|-- YoloObjectRepresentationModel : extends
+AbstractModelClass --> ObjectCoordData : uses
+YoloObjectRepresentationModel --> Results : uses
+
+class ObjectCoordData {
+    id: int
+    label: int
+    x_2d: float
+    y_2d: float
+    depth: float
+}
+
+@enduml

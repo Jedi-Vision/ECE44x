@@ -1,0 +1,16 @@
+flowchart TD
+    A[Start] --> B[Initialize YoloObjectRepresentationModel]
+    B --> C[Setup YOLO model]
+    C --> D[Run model]
+    D --> E[Preprocess input]
+    E --> F[Process input]
+    F --> G[Postprocess results]
+    G --> H{Boxes with tracks?}
+    H -- Yes --> I[Extract boxes, ids, labels]
+    I --> J[Update track_history]
+    J --> K[Create ObjectCoordData list]
+    K --> L[Return list of objects]
+    H -- No --> M[Return empty list]
+    G --> N[Optionally show detection]
+    M --> P[End]
+    L --> P

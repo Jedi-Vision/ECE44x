@@ -61,14 +61,13 @@ graph TD
             code_in -- "camera_nano_envin" --> cam_input_process
             code_in -- "shs_nano_comm" --> sys_management
             cam_input_process -- "cam_proc_video_feed_data" --> object_representation
-            cam_input_process -- "cam_proc_video_feed_data" --> environment_representation
             cam_input_process -- "cam_proc_video_feed_data" --> scene_creation
-            object_representation -- "object_rep_audio_info_data" --> scene_to_audio_info
-            environment_representation -- "object_rep_audio_info_data" --> scene_to_audio_info
-            scene_creation -- "scene_audio_info_data" --> scene_to_audio_info
+            object_representation -- "object_rep_object_buff_data" --> object_buffer
+            scene_creation -- "scene_creation_object_buff_data" --> object_buffer
+            object_buffer -- "object_buff_audio_info_data" --> object_to_audio_info
             sys_management -- "sys_management_info" --> sys_info_to_audio
             sys_info_to_audio -- "sys_mng_info_audio_info_track" --> audio_info_to_spatial_audio
-            scene_to_audio_info -- "audio_info_spatial_audio_data" --> audio_info_to_spatial_audio
+            object_to_audio_info -- "audio_info_spatial_audio_data" --> audio_info_to_spatial_audio
             audio_info_to_spatial_audio -- "nano_usb_spatial_audio_data" --> code_out
         end
     end
@@ -124,8 +123,8 @@ graph LR
 #### Object Representation Block
 ```mermaid
 graph LR
-    in -- "scene" --> object_rep_model
-    object_rep_model -- "object_scene" --> out
+    in -- "cam_proc_video_feed_data" --> object_rep_model
+    object_rep_model -- "object_rep_object_buffer_data" --> out
 ```
 
 #### Scene to Audio Info Block
