@@ -1,0 +1,38 @@
+@startuml object_buff
+
+class ObjectBuffer {
+    - max_size: int
+    - q: Queue
+    - ctx: zmq.Context
+    - addr: str
+    - thread: Thread
+    - serial_type: "struct" | "protobuf"
+    - output_to: "socket" | "file" | "none"
+    - output_file: File
+    - socket: zmq.Socket
+    - running: bool
+
+    + __init__(size, addr, output_to, serial_type)
+    + start()
+    + stop()
+    + put(message: ObjectRepData): void
+    - _serialize_message(message: ObjectRepData, type: "protobuf" | "struct" = "struct"): bytes
+    - _send_message(): void
+}
+
+class ObjectRepData {
+    id: int
+    label: int
+    x_2d: float
+    y_2d: float
+    depth: float
+}
+
+ObjectBuffer "1" *-- "1" Queue
+ObjectBuffer "1" *-- "1" zmq.Context
+ObjectBuffer "1" *-- "1" Thread
+ObjectBuffer "1" *-- "1" zmq.Socket
+ObjectBuffer "1" *-- "1" File
+ObjectBuffer "1" o-- "1" ObjectRepData
+
+@enduml

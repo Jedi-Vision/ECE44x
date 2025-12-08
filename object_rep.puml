@@ -3,7 +3,7 @@
 abstract AbstractModelClass {
     model : torch.nn.Module
     device : str
-    + {abstract} run(inputs): list[ObjectCoordData]
+    + {abstract} run(inputs): list[ObjectRepData]
     - {abstract} preprocess(input)
     - {abstract} process(input)
     - {abstract} postprocess(out)
@@ -14,9 +14,9 @@ class YoloObjectRepresentationModel {
     device: str
     track_history: dict
     retain_frames: int
-    + run(inputs: numpy.ndarray<uint8>[B, C, H, W]): list[ObjectCoordData]
+    + run(inputs: numpy.ndarray<uint8>[B, C, H, W]): list[ObjectRepData]
     - process(input: numpy.ndarray<uint8>[B, C, H, W]): Results
-    - postprocess(out: Results): list[ObjectCoordData]
+    - postprocess(out: Results): list[ObjectRepData]
 }
 
 class Results {
@@ -34,10 +34,10 @@ class Results {
 }
 
 AbstractModelClass <|-- YoloObjectRepresentationModel : extends
-AbstractModelClass --> ObjectCoordData : uses
+AbstractModelClass --> ObjectRepData : uses
 YoloObjectRepresentationModel --> Results : uses
 
-class ObjectCoordData {
+class ObjectRepData {
     id: int
     label: int
     x_2d: float

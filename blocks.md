@@ -127,6 +127,13 @@ graph LR
     object_rep_model -- "object_rep_object_buffer_data" --> out
 ```
 
+#### Object Buffer Block
+```mermaid
+graph LR
+    in -- "object_rep_object_buff_data" --> object_buffer
+    object_buffer -- "object_buff_audio_info_data" --> out
+```
+
 #### Scene to Audio Info Block
 ```mermaid
 graph LR

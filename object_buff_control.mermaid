@@ -1,0 +1,26 @@
+flowchart TD
+    A[ObjectBuffer.__init__] --> B{output_to}
+    B -- "file" --> C[Open output file]
+    B -- else --> D[No file output]
+    A --> E[ObjectBuffer.start]
+    E --> F[Create socket & connect]
+    F --> G[Start _send_message thread]
+    A --> H[ObjectBuffer.put]
+    H --> I{Queue full?}
+    I -- Yes --> J[Remove oldest frame]
+    I -- No --> K[Put message in queue]
+    G --> L[_send_message loop]
+    L --> M{Get message from queue}
+    M -- Success --> N{output_to}
+    N -- "socket" --> O[_serialize_message]
+    O --> P[Send via socket]
+    P --> Q[Wait for server reply]
+    N -- "file" --> R[Dump message to file]
+    N -- "none" --> S[Do nothing]
+    N -- else --> T[Raise Exception]
+    M -- Empty --> U[Pass]
+    L --> V[Queue task_done]
+    A --> W[ObjectBuffer.stop]
+    W --> X[Queue join]
+    X --> Y[Stop thread]
+    Y --> Z[Close socket & terminate context]
