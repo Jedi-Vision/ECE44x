@@ -5,16 +5,18 @@
 graph LR
      %% System input and outputs
     camera_nano_envin --> Jedi
+    env_struc_envin --> Jedi
     %%usr_in --> Jedi
     Jedi --> amp_out_vibration_asig
     Jedi --> safety_out
+    Jedi --> env_struc_envout
 ```
 
 ## Top-Level System
 ```mermaid
 graph TD
     subgraph System
-        subgraph Jedi
+        subgraph Enclosure
             %% Power management block
             sys_input -- "camera_nano_envin" --> Nano
 
@@ -37,10 +39,12 @@ graph TD
         end
 
         %% System input and outputs
-        camera_nano_envin --> Jedi
-        %%usr_in --> Jedi
-        Jedi --> amp_out_vibration_asig
-        Jedi --> safety_out
+        camera_nano_envin --> Enclosure
+        %%usr_in --> Enclosure
+        Enclosure --> amp_out_vibration_asig
+        Enclosure --> safety_out
+        env_struc_envin --> Enclosure
+        Enclosure --> env_struc_envout
     end
 ```
 
