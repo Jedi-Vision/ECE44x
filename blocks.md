@@ -4,7 +4,6 @@
 ```mermaid
 graph LR
      %% System input and outputs
-    usb_pwr_mng_dcpwr --> Jedi
     camera_nano_envin --> Jedi
     %%usr_in --> Jedi
     Jedi --> amp_out_vibration_asig
@@ -17,12 +16,7 @@ graph TD
     subgraph System
         subgraph Jedi
             %% Power management block
-            sys_input -- "usb_pwr_mng_dcpwr" --> pwr_management
             sys_input -- "camera_nano_envin" --> Nano
-            pwr_management -- "dc_pwr" --> Nano
-            pwr_management -- "dc_pwr" --> amp_vibration
-            pwr_management -- "pwr_mng_dac_dcpwr" --> audio_dac
-            pwr_management -- "pwr_mng_shm_dcpwr" --> sys_health_monitor_mc
 
             %% Camera
             %%sys_input -- "environ_in" --> camera
@@ -33,7 +27,6 @@ graph TD
             %%mode_switch -- "det_mode" --> Nano
 
             %% System Health Monitor
-            pwr_management <-- "pwr_mng_shm_asig" --> sys_health_monitor_mc
             sys_health_monitor_mc <-- "shs_nano_comm" --> Nano
 
             Nano -- "nano_dac_comm" --> audio_dac
@@ -44,7 +37,6 @@ graph TD
         end
 
         %% System input and outputs
-        usb_pwr_mng_dcpwr --> Jedi
         camera_nano_envin --> Jedi
         %%usr_in --> Jedi
         Jedi --> amp_out_vibration_asig
